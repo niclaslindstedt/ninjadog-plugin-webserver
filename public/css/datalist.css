@@ -1,0 +1,30 @@
+.datalist {
+  width: 100%;
+}
+
+.datalist th {
+  text-align: left;
+  padding-left: 5px;
+}
+
+.datalist th:not(:first-of-type), .datalist td:not(:first-of-type) {
+  padding-left: 10px;
+}
+
+.datalist tr:hover {
+  background-color: var(--hover-color);
+}
+
+.datalist tr:not(:first-of-type) {
+  margin-top: 10px;
+}
+
+.datalist td {
+  color: white;
+  max-width: 320px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 5px 0 5px 5px;
+  transition: color 0.3s;
+}

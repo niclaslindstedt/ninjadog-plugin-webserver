@@ -1,0 +1,72 @@
+@import "datalist.css";
+:root {
+  --text-color: rgb(216, 255, 164);
+  --link-color: rgb(230, 255, 197);
+  --hover-color: rgb(43, 39, 39);
+}
+
+body {
+  background-color: rgb(26, 24, 24);
+  color: var(--text-color);
+  font-family: 'Inconsolata', monospace;
+}
+
+a {
+  color: var(--link-color);
+  display: inline-block;
+  text-decoration: none;
+}
+
+a::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background: rgb(255, 255, 255);
+  transition: width .3s;
+  margin: 0 auto;
+}
+
+a.router-link-exact-active:not(.logo)::after {
+  width: 100%;
+}
+
+a.logo {
+  text-decoration: none;
+  color: var(--text-color);
+}
+
+nav {
+  margin-bottom: 10px;
+}
+
+nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav ul li:not(:last-of-type)::after {
+  content: "|";
+  margin: 0 5px;
+}
+
+.torrents .stalledUP td {
+  color: rgb(165, 165, 165) !important;
+}
+
+.torrents .uploading td {
+  color: rgb(250, 143, 81) !important;
+}
+
+.torrents .downloading td {
+  color: rgb(9, 247, 88) !important;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.no-list {
+  list-style: none;
+}

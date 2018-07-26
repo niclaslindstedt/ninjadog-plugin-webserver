@@ -49,7 +49,12 @@ module.exports = class Webserver extends Base {
 
   addRoute(method, route, callback) {
     app[method](route, callback);
-    emitter.emit('message', `Added route ${method}: ${route}`, 'info');
+    emitter.emit(
+      'message',
+      `Added route ${method}: ${route}`,
+      'info',
+      Webserver.name
+    );
   }
 
   setupListeners() {

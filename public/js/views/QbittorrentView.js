@@ -60,13 +60,13 @@ export default {
               ? prettierBytes(torrent.downloaded)
               : null,
             added: dateFns.distanceInWordsStrict(
-              new Date(torrent.added_on * 1000),
-              new Date()
+              new Date(),
+              new Date(torrent.added_on * 1000)
             ),
             completed: torrent.completion_on
               ? dateFns.distanceInWordsStrict(
-                  new Date(torrent.completion_on * 1000),
-                  new Date()
+                  new Date(),
+                  new Date(torrent.completion_on * 1000)
                 )
               : null,
             dlspeed: `${prettierBytes(torrent.dlspeed || 0)}/s`,

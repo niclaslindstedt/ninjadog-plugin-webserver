@@ -72,6 +72,7 @@ export default {
             dlspeed: `${prettierBytes(torrent.dlspeed || 0)}/s`,
             upspeed: `${prettierBytes(torrent.upspeed || 0)}/s`,
             progress: `${(torrent.progress * 100).toFixed(2)}%`,
+            tracker: torrent.trackerName,
             state: torrent.state
           };
         });

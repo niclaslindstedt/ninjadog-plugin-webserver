@@ -46,7 +46,7 @@ nav ul {
   list-style: none;
 }
 
-nav ul li:not(:last-of-type)::after {
+nav ul li:not(:last-of-type)::after, .torrent-transferinfo li:not(:last-of-type)::after {
   content: "|";
   margin: 0 5px;
 }
@@ -69,4 +69,14 @@ nav ul li:not(:last-of-type)::after {
 
 .no-list {
   list-style: none;
+}
+
+.torrent-transferinfo {
+  padding: 0;
+  margin: 0 0 0 7px;
+}
+
+.torrent-transferinfo li {
+  display: inline-block;
+  color: beige
 }

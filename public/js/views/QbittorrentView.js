@@ -2,6 +2,7 @@ export default {
   name: 'Qbittorrent',
   template: `
     <div>
+      <ul v-if="transferInfo" class="no-list torrent-transferinfo"><li>dl: {{ transferInfo.dl_info.data }} / {{ transferInfo.alltime.dl }} ({{ transferInfo.dl_info.speed }})</li><li>ul: {{ transferInfo.up_info.data }} / {{ transferInfo.alltime.ul }} ({{ transferInfo.up_info.speed }})</li><li>global ratio: {{ transferInfo.global_ratio }}</li></ul>
       <table class="datalist torrents" v-if="torrents.length > 0">
         <thead>
           <th v-for="key in Object.keys(torrents[0])">{{ key }}</th>
@@ -19,13 +20,15 @@ export default {
   data() {
     return {
       inview: false,
-      torrents: []
+      torrents: [],
+      transferInfo: null
     };
   },
   mounted() {
     this.inview = true;
 
     this.getList();
+    this.getTransferInfo();
   },
 
   beforeDestroy() {
@@ -36,14 +39,38 @@ export default {
     timer() {
       setTimeout(() => {
         this.getList();
+        this.getTransferInfo();
       }, 3000);
+    },
+
+    async getTransferInfo() {
+      this.transferInfo =
+        (await this.$http
+          .get('/qbittorrent/transferinfo')
+          .then(res => res.data)) || [];
+
+      const ti = this.transferInfo;
+      this.transferInfo = {
+        alltime: {
+          dl: prettierBytes(ti.alltime_dl),
+          ul: prettierBytes(ti.alltime_ul)
+        },
+        global_ratio: ti.global_ratio,
+        dl_info: {
+          data: prettierBytes(ti.dl_info_data),
+          speed: `${prettierBytes(ti.dl_info_speed)}/s`,
+          limit: ti.dl_info_limit
+        },
+        up_info: {
+          data: prettierBytes(ti.up_info_data),
+          speed: `${prettierBytes(ti.up_info_speed)}/s`,
+          limit: ti.up_info_limit
+        }
+      };
     },
     async getList() {
       this.torrents =
-        (await this.$http
-          .get('/qbittorrent/list')
-          .then(res => res.data)
-          .catch(() => this.timer())) || [];
+        (await this.$http.get('/qbittorrent/list').then(res => res.data)) || [];
 
       this.torrents = this.torrents
         .map(torrent => ({

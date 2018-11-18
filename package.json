@@ -1,6 +1,6 @@
 {
   "name": "ninjakatt-plugin-webserver",
-  "version": "1.0.6",
+  "version": "1.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -19,6 +19,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3",
-    "ninjakatt-plugin-base": "^1.0.0"
+    "ninjakatt-plugin-base": "^1.0.3"
   }
 }

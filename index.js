@@ -1,4 +1,3 @@
-const Base = require('ninjakatt-plugin-base');
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
@@ -10,13 +9,12 @@ app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 app.use(express.static(__dirname + '/public'));
 
-module.exports = class Webserver extends Base {
+module.exports = class Webserver {
   constructor() {
-    super(__dirname);
+    this.construct(__dirname);
     this.server = null;
     this.router = null;
   }
-
   setup() {
     this.setupListeners();
     setTimeout(() => this.startServer(), 2000);

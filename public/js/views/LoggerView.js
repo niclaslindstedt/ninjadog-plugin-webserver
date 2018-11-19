@@ -3,11 +3,14 @@ export default {
   template: `
     <div>
       <a href="#" @click="clearLog">x clear log</a>
-      <ul class="no-list">
-        <li v-for="(entry, i) in entries" :key="i" :class="'log-'+entry.color">
-          [{{ entry.date }}] {{ entry.message }}
-        </li>
-      </ul>
+      <div v-for="(entries, day) in entries" :key="day">
+        <h4>{{ day }}</h4>
+        <ul class="no-list">
+          <li v-for="(entry, i) in entries" :key="i" :class="'log-'+entry.color">
+            [{{ entry.date }}] {{ entry.message }}
+          </li>
+        </ul>
+      </div>
     </div>
   `,
   data() {
@@ -27,18 +30,27 @@ export default {
 
   methods: {
     async logTimer() {
-      this.entries = await this.$http.get('/logger/log').then(res =>
+      const entries = await this.$http.get('/logger/log').then(res =>
         res.data
           .split('\n')
           .filter(line => line.length > 0)
           .map(line => line.split(';'))
           .map(entry => ({
             color: entry[0],
-            date: dateFns.format(new Date(entry[1]), 'ddd HH:mm'),
-            message: entry[2]
+            date: dateFns.format(new Date(entry[1]), 'HH:mm'),
+            message: entry[2],
+            day: dateFns.format(new Date(entry[1]), 'ddd DD MMM')
           }))
           .reverse()
       );
+
+      this.entries = entries.reduce((prev, curr) => {
+        if (!prev[curr.day]) {
+          prev[curr.day] = [];
+        }
+        prev[curr.day] = [...prev[curr.day], curr];
+        return prev;
+      }, {});
 
       if (this.inview) {
         setTimeout(() => {

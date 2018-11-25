@@ -2,9 +2,11 @@ export default {
   name: 'Logger',
   template: `
     <div>
-      <a href="#" @click="clearLog">x clear log</a>
+      <div class="box">
+        <a href="#" @click.prevent="clearLog">x clear log</a>
+      </div>
       <div v-for="(entries, day) in entries" :key="day">
-        <h4>{{ day }}</h4>
+        <h2>{{ day }}</h2>
         <ul class="no-list">
           <li v-for="(entry, i) in entries" :key="i" :class="'log-'+entry.color">
             [{{ entry.date }}] {{ entry.message }}

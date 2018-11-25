@@ -2,18 +2,20 @@ export default {
   name: 'Qbittorrent',
   template: `
     <div>
+      <div class="box">
       <ul v-if="transferInfo" class="no-list torrent-transferinfo"><li>download: {{ transferInfo.dl_info.data }} ({{ transferInfo.dl_info.speed }})</li><li>ul: {{ transferInfo.up_info.data }} ({{ transferInfo.up_info.speed }})</li></ul>
+      </div>
       <table class="datalist torrents" v-if="torrents.length > 0">
         <thead>
           <th v-for="key in Object.keys(torrents[0])">{{ key }}</th>
         </thead>
-        <tbody>
-          <tr v-for="torrent in torrents" :class="torrent.state">
+        <transition-group tag="tbody" name="list">
+          <tr v-for="torrent in torrents" :class="torrent.state" :key="torrent.name">
             <td v-for="key in Object.keys(torrent)">
               {{ torrent[key] }}
             </td>
           </tr>
-        </tbody>
+        </transition-group>
       </table>
     </div>
   `,
@@ -103,6 +105,17 @@ export default {
 
       if (this.inview) {
         this.timer();
+      }
+    },
+
+    getIcon(state) {
+      switch (state) {
+        case 'pausedDL':
+          return '⏸️';
+        case 'stalledUP':
+          return '↗️';
+        case 'stalledDOWN':
+          return '↘️';
       }
     }
   }

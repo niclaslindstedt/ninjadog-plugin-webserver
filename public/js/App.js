@@ -12,7 +12,9 @@ export default {
           </li>
         </ul>
       </nav>     
-      <router-view></router-view>
+      <div class="content">
+        <router-view></router-view>
+      </div>
     </div>
   `,
   mounted() {},

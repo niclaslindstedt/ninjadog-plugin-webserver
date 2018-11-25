@@ -28,3 +28,7 @@
   padding: 5px 0 5px 5px;
   transition: color 0.3s;
 }
+
+.datalist.two-columns td:first-of-type {
+  width: 90%;
+}

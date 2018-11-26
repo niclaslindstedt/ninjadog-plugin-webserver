@@ -94,10 +94,12 @@ export default {
 
       const show = e.target.value;
       this.loading = true;
-      await this.$http.post('/torrentrss/shows', { show });
+      try {
+        await this.$http.post('/torrentrss/shows', { show });
+        this.$refs.showinput.value = '';
+        this.shows.push(show);
+      } catch (error) {}
       this.loading = false;
-      this.$refs.showinput.value = '';
-      this.shows.push(show);
     }
   },
 

@@ -1,4 +1,4 @@
-import { sortString } from '../helpers/sort.js';
+import { sortString, sortByName } from '../helpers/sort.js';
 
 export default {
   name: 'Qbittorrent',
@@ -8,14 +8,18 @@ export default {
         <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput">
       </div>
       <h2>Active shows</h2>
-      <table class="datalist two-columns" v-if="shows.length > 0">
+      <table class="datalist four-columns" v-if="shows.length > 0">
         <thead>
           <th>Name</th>
+          <th class="center-text">Downloads</th>
+          <th class="center-text">Last download</th>
           <th class="center-text">Remove</th>
         </thead>
         <transition-group tag="tbody" name="list">
-          <tr v-for="show in sortedShows" :key="show">
-            <td v-text="show"></td>
+          <tr v-for="show in sortedShows" :key="show.name">
+            <td v-text="show.name"></td>
+            <td class="center-text" v-text="show.downloads.length"></td>
+            <td class="center-text" v-text="lastDownload(show)"></td>
             <td class="center-text">
               <span class="cursor-pointer" @click="remove(show)">🗑️</span>
             </td>
@@ -31,10 +35,10 @@ export default {
             <th class="center-text">Restore</th>
           </thead>
           <transition-group tag="tbody" name="list">
-            <tr v-for="show in removedSortedShows" :key="show">
-              <td v-text="show"></td>
+            <tr v-for="(show, index) in removedSortedShows" :key="index">
+              <td v-text="show.name"></td>
               <td class="center-text">
-                <span class="cursor-pointer" @click="restore(show)">✔️</span>
+                <span class="cursor-pointer" @click="restore(show)">♻️</span>
               </td>
             </tr>
           </transition-group>
@@ -76,15 +80,20 @@ export default {
       }
     },
     async remove(show) {
-      await this.$http.delete('/torrentrss/shows', { params: { show } });
-      this.shows.splice(this.shows.indexOf(show), 1);
+      await this.$http.delete('/torrentrss/shows', {
+        params: { show: show.name }
+      });
+      this.shows.splice(this.shows.findIndex(s => s.name === show.name), 1);
       this.removedShows.push(show);
     },
     async restore(show) {
       await this.$http.delete('/torrentrss/removed-shows', {
-        params: { show }
+        params: { show: show.name }
       });
-      this.removedShows.splice(this.removedShows.indexOf(show), 1);
+      this.removedShows.splice(
+        this.removedShows.findIndex(s => s.name === show.name),
+        1
+      );
       this.shows.push(show);
     },
     async addShow(e) {
@@ -97,18 +106,26 @@ export default {
       try {
         await this.$http.post('/torrentrss/shows', { show });
         this.$refs.showinput.value = '';
-        this.shows.push(show);
+        this.shows.push({ name: show, downloads: [] });
       } catch (error) {}
       this.loading = false;
+    },
+
+    lastDownload(show) {
+      const last = show.downloads.slice(0).pop();
+      if (!last) {
+        return '';
+      }
+      return dateFns.distanceInWordsStrict(new Date(), new Date(last.date));
     }
   },
 
   computed: {
     sortedShows() {
-      return this.shows.sort(sortString);
+      return this.shows.sort(sortByName);
     },
     removedSortedShows() {
-      return this.removedShows.sort(sortString);
+      return this.removedShows.sort(sortByName);
     }
   }
 };

@@ -1,24 +1,30 @@
-export default {
-  name: 'Qbittorrent',
-  template: `
-    <div>
-      <div class="box">
-      <ul v-if="transferInfo" class="no-list torrent-transferinfo"><li>download: {{ transferInfo.dl_info.data }} ({{ transferInfo.dl_info.speed }})</li><li>ul: {{ transferInfo.up_info.data }} ({{ transferInfo.up_info.speed }})</li></ul>
-      </div>
-      <table class="datalist torrents" v-if="torrents.length > 0">
-        <thead>
-          <th v-for="key in Object.keys(torrents[0])">{{ key }}</th>
-        </thead>
-        <transition-group tag="tbody" name="list">
-          <tr v-for="torrent in torrents" :class="torrent.state" :key="torrent.name">
-            <td v-for="key in Object.keys(torrent)">
-              {{ torrent[key] }}
-            </td>
-          </tr>
-        </transition-group>
-      </table>
+<template>
+  <div>
+    <div class="box">
+      <ul v-if="transferInfo" class="no-list torrent-transferinfo">
+        <li>download: {{ transferInfo.dl_info.data }} ({{ transferInfo.dl_info.speed }})</li>
+        <li>ul: {{ transferInfo.up_info.data }} ({{ transferInfo.up_info.speed }})</li>
+      </ul>
     </div>
-  `,
+    <table class="container datalist torrents" v-if="torrents.length > 0">
+      <thead>
+        <th v-for="key in Object.keys(torrents[0])" :key="key">{{ key }}</th>
+      </thead>
+      <transition-group tag="tbody" name="list">
+        <tr v-for="torrent in torrents" :class="torrent.state" :key="torrent.name">
+          <td v-for="(key, i) in Object.keys(torrent)" :key="i">{{ torrent[key] }}</td>
+        </tr>
+      </transition-group>
+    </table>
+  </div>
+</template>
+
+<script>
+import { distanceInWordsStrict } from "date-fns";
+const prettierBytes = require("prettier-bytes");
+
+export default {
+  name: "Qbittorrent",
   data() {
     return {
       inview: false,
@@ -48,7 +54,7 @@ export default {
     async getTransferInfo() {
       this.transferInfo =
         (await this.$http
-          .get('/qbittorrent/transferinfo')
+          .get("/qbittorrent/transferinfo")
           .then(res => res.data)) || [];
 
       const ti = this.transferInfo;
@@ -69,7 +75,7 @@ export default {
     },
     async getList() {
       this.torrents =
-        (await this.$http.get('/qbittorrent/list').then(res => res.data)) || [];
+        (await this.$http.get("/qbittorrent/list").then(res => res.data)) || [];
 
       this.torrents = this.torrents
         .map(torrent => ({
@@ -85,12 +91,12 @@ export default {
             downloaded: torrent.downloaded
               ? prettierBytes(torrent.downloaded)
               : null,
-            added: dateFns.distanceInWordsStrict(
+            added: distanceInWordsStrict(
               new Date(),
               new Date(torrent.added_on * 1000)
             ),
             completed: torrent.completion_on
-              ? dateFns.distanceInWordsStrict(
+              ? distanceInWordsStrict(
                   new Date(),
                   new Date(torrent.completion_on * 1000)
                 )
@@ -110,13 +116,28 @@ export default {
 
     getIcon(state) {
       switch (state) {
-        case 'pausedDL':
-          return '⏸️';
-        case 'stalledUP':
-          return '↗️';
-        case 'stalledDOWN':
-          return '↘️';
+        case "pausedDL":
+          return "⏸️";
+        case "stalledUP":
+          return "↗️";
+        case "stalledDOWN":
+          return "↘️";
       }
     }
   }
 };
+</script>
+
+<style>
+.torrents .stalledUP td {
+  color: rgb(165, 165, 165) !important;
+}
+
+.torrents .uploading td {
+  color: rgb(250, 143, 81) !important;
+}
+
+.torrents .downloading td {
+  color: rgb(9, 247, 88) !important;
+}
+</style>

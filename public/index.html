@@ -1,28 +1,31 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <title>ninjakatt</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
-      type="text/css"
-      media="screen"
-      href="/css/style.css"
+      href="https://use.fontawesome.com/releases/v5.6.1/css/all.css"
+      integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP"
+      crossorigin="anonymous"
     />
-
-    <script src="https://unpkg.com/vue@2.5.16/dist/vue.js"></script>
-    <script src="https://unpkg.com/vue-router/dist/vue-router.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/date-fns/1.29.0/date_fns.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/prettier-bytes@1.0.4/index.min.js"></script>
-    <link rel="shortcut icon" type="image/png" href="/favicon.png" />
+    <link
+      rel="shortcut icon"
+      type="image/png"
+      href="<%= BASE_URL %>favicon.png"
+    />
   </head>
-
   <body>
-    <div id="app"><app></app></div>
-
-    <script type="module" src="/js/main.js"></script>
+    <noscript>
+      <strong
+        >We're sorry but ninjakatt-plugin-webserver doesn't work properly
+        without JavaScript enabled. Please enable it to continue.</strong
+      >
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
   </body>
 </html>

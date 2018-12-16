@@ -1,13 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const http = require('http');
-
+const fs = require('fs-extra');
+const path = require('path');
+const exec = require('child_process').exec;
+const cors = require('cors');
 const emitter = global.emitter;
+
 const app = express();
 
 app.use(bodyParser.json({ limit: '50mb' }));
 app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/dist'));
+app.use(cors());
 
 module.exports = class Webserver {
   constructor() {
@@ -17,10 +22,24 @@ module.exports = class Webserver {
   }
   setup() {
     this.setupListeners();
-    setTimeout(() => this.startServer(), 2000);
+    setTimeout(() => {
+      const built = fs.existsSync(path.resolve(__dirname, 'dist'));
+      if (!built) {
+        emitter.emit('message', `Building page...`, 'info', Webserver.name);
+
+        const building = exec('npm run build', { cwd: __dirname });
+        building.on('exit', () => {
+          this.startServer();
+        });
+      } else {
+        this.startServer();
+      }
+    }, 2000);
   }
 
   startServer() {
+    emitter.emit('message', `Starting`, 'info', Webserver.name);
+
     if (this.server) {
       this.server.close();
     }
@@ -34,14 +53,21 @@ module.exports = class Webserver {
           .filter(r => r.name === 'bound dispatch')
           .map(r => ({
             route: r.route.path,
-            method: Object.keys(r.route.methods)[0]
+            method: Object.keys(r.route.methods)[0],
           }))
-          .reverse()
+          .reverse(),
       });
     });
 
     this.server = http.createServer(app);
-    this.server.listen(this.settings.port);
+    this.server.listen(this.settings.port, () => {
+      emitter.emit(
+        'message',
+        `Started, listening on port ${this.settings.port}`,
+        'info',
+        Webserver.name
+      );
+    });
   }
 
   addRoute(method, route, callback) {

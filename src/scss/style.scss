@@ -1,0 +1,94 @@
+@import 'variables';
+@import 'datalist';
+@import 'transitions';
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: $background-color;
+  color: $text-color;
+  font-family: 'Inconsolata', monospace;
+  padding: 0;
+  margin: 0;
+}
+
+a {
+  color: $link-color;
+  text-decoration: none;
+  position: relative;
+  transition: color 0.8s;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.no-list {
+  list-style: none;
+}
+
+.no-list {
+  padding-left: 0;
+}
+
+.torrent-transferinfo {
+  padding: 0;
+  margin: 0 0 0 7px;
+}
+
+.center-text {
+  text-align: center !important;
+}
+
+.torrent-transferinfo li {
+  display: inline-block;
+}
+
+input[type='text'] {
+  background-color: transparent;
+  padding: 3px 10px;
+  border: 0;
+  border-left: 2px solid $text-color;
+  color: #fff;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+  width: 100%;
+}
+
+input[type='text']:focus {
+  background-color: lighten($box-background-color, 2%);
+  border-left-color: lightskyblue;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.box {
+  position: relative;
+  padding: 10px;
+  background-color: $box-background-color;
+  color: lighten($text-color-dark, 3%);
+  a {
+    color: lighten($text-color-dark, 3%);
+    &:hover {
+      color: $link-color;
+    }
+  }
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: $title-color;
+}
+
+.container {
+  padding: 10px;
+  h2:first-of-type,
+  h4:first-of-type {
+    margin-top: 0;
+  }
+}

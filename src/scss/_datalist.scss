@@ -15,9 +15,6 @@
 
 .datalist tr:hover {
   background-color: $hover-color;
-  td {
-    color: $background-color;
-  }
 }
 
 .datalist tr:not(:first-of-type) {

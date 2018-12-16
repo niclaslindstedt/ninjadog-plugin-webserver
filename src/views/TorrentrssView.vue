@@ -129,6 +129,9 @@ export default {
 
   computed: {
     sortedShows() {
+      if (!this.shows) {
+        return;
+      }
       return this.shows.sort(sortByName);
     },
     removedSortedShows() {

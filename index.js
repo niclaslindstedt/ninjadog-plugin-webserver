@@ -6,6 +6,7 @@ const path = require('path');
 const exec = require('child_process').exec;
 const cors = require('cors');
 const emitter = global.emitter;
+const { asyncForEach, getPackage } = require('./helpers');
 
 const app = express();
 
@@ -26,7 +27,6 @@ module.exports = class Webserver {
       const built = fs.existsSync(path.resolve(__dirname, 'dist'));
       if (!built) {
         emitter.emit('message', `Building page...`, 'info', Webserver.name);
-
         const building = exec('npm run build', { cwd: __dirname });
         building.on('exit', () => {
           this.startServer();
@@ -46,9 +46,14 @@ module.exports = class Webserver {
 
     const apiPrefix = '/api';
 
-    app.get(`${apiPrefix}`, function(req, res) {
+    app.get(`${apiPrefix}`, async (req, res) => {
+      const plugins = await this.getPlugins();
+      const mainPackage = await getPackage('ninjakatt', false);
       res.status(200).send({
-        plugins: global.Ninjakatt.plugins.installed.map(p => p.toLowerCase()),
+        plugins,
+        info: {
+          version: mainPackage.version,
+        },
         routes: app._router.stack
           .filter(r => r.name === 'bound dispatch')
           .map(r => ({
@@ -70,21 +75,26 @@ module.exports = class Webserver {
     });
   }
 
+  async getPlugins() {
+    const plugins = global.Ninjakatt.plugins.installed.map(p => ({
+      name: p.toLowerCase(),
+      version: '',
+    }));
+
+    await asyncForEach(plugins, async plugin => {
+      const pkg = await getPackage(plugin.name);
+      plugin.version = pkg.version;
+    });
+
+    return plugins;
+  }
+
   addRoute(method, route, callback) {
     app[method](route, callback);
-    emitter.emit(
-      'message',
-      `Added route ${method}: ${route}`,
-      'info',
-      Webserver.name
-    );
+    emitter.emit('message', `Added route ${method}: ${route}`, 'info', Webserver.name);
   }
 
   setupListeners() {
-    emitter.register(
-      'webserver.add-route',
-      this.addRoute.bind(this),
-      Webserver.name
-    );
+    emitter.register('webserver.add-route', this.addRoute.bind(this), Webserver.name);
   }
 };

@@ -7,6 +7,11 @@
           <span v-text="plugin"></span>
         </router-link>
       </li>
+      <li>
+        <router-link :to="{ name: 'versions' }">
+          <span>versions</span>
+        </router-link>
+      </li>
     </ul>
     <div class="toggle-size" @click="toggle()">
       <i class="fas" :class="minimized ? 'fa-angle-double-right' : 'fa-angle-double-left'"></i>
@@ -15,16 +20,16 @@
 </template>
 
 <script>
-import { sortString } from "../helpers/sort.js";
+import { sortString } from '../helpers/sort.js';
 export default {
   data() {
     return {
-      minimized: false
+      minimized: false,
     };
   },
   mounted() {
-    this.minimized = localStorage.getItem("minimized")
-      ? JSON.parse(localStorage.getItem("minimized"))
+    this.minimized = localStorage.getItem('minimized')
+      ? JSON.parse(localStorage.getItem('minimized'))
       : false;
     this.toggle(true);
   },
@@ -32,24 +37,25 @@ export default {
     toggle(justEmit = false) {
       if (!justEmit) {
         this.minimized = !this.minimized;
-        localStorage["minimized"] = this.minimized;
+        localStorage['minimized'] = this.minimized;
       }
-      this.$emit("minimize", this.minimized);
-    }
+      this.$emit('minimize', this.minimized);
+    },
   },
   computed: {
     pluginsWithRoute() {
       const activeRoutes = this.$router.options.routes.map(r => r.name);
       return this.$api.plugins
+        .map(p => p.name)
         .filter(p => activeRoutes.indexOf(p) > -1)
         .sort(sortString);
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables.scss";
+@import '../scss/_variables.scss';
 
 a.logo {
   text-decoration: none;
@@ -64,7 +70,7 @@ a.logo {
     word-wrap: none;
     display: block;
     white-space: nowrap;
-    content: "(˚̨ ˚ )~~~~~~";
+    content: '(˚̨ ˚ )~~~~~~';
   }
 }
 
@@ -119,7 +125,7 @@ a {
 }
 
 a::before {
-  content: "";
+  content: '';
   display: block;
   width: 0;
   height: 100%;
@@ -147,7 +153,7 @@ a.router-link-exact-active:not(.logo)::before {
   width: 50px;
 }
 #app.minimized a.logo::before {
-  content: "^.^";
+  content: '^.^';
 }
 
 #app.minimized a span {

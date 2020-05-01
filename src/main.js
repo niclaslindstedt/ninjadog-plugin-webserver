@@ -8,7 +8,7 @@ import './scss/style.scss';
 Vue.config.productionTip = false;
 
 if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = `http://localhost:8580`;
+  axios.defaults.baseURL = `http://localhost:8585`;
 }
 
 import Api from './api.js';

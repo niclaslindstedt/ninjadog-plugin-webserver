@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput">
+      <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput" />
     </div>
     <div class="container">
       <h2>Active shows</h2>
@@ -13,12 +13,14 @@
           <th class="center-text">Remove</th>
         </thead>
         <transition-group tag="tbody" name="list">
-          <tr v-for="show in sortedShows" :key="show.name">
+          <tr v-for="(show, index) in sortedShows" :key="`s${index}`">
             <td v-text="show.name"></td>
             <td class="center-text" v-text="show.downloads.length"></td>
             <td class="center-text" v-text="lastDownload(show)"></td>
             <td class="center-text">
-              <i class="fas fa-trash-alt cursor-pointer" @click="remove(show)"></i>
+              <span @click="remove(show)">
+                <i class="fas fa-trash-alt cursor-pointer"></i>
+              </span>
             </td>
           </tr>
         </transition-group>
@@ -32,10 +34,12 @@
             <th class="center-text">Restore</th>
           </thead>
           <transition-group tag="tbody" name="list">
-            <tr v-for="(show, index) in removedSortedShows" :key="index">
+            <tr v-for="(show, index) in removedSortedShows" :key="`r${index}`">
               <td v-text="show.name"></td>
               <td class="center-text">
-                <i class="fas fa-redo cursor-pointer" @click="restore(show)">️</i>
+                <span @click="restore(show)" class="cursor-pointer">
+                  <i class="fas fa-redo"></i>
+                </span>
               </td>
             </tr>
           </transition-group>
@@ -46,26 +50,24 @@
 </template>
 
 <script>
-import { distanceInWordsStrict } from "date-fns";
-import { sortByName } from "../helpers/sort.js";
+import { distanceInWordsStrict } from 'date-fns';
+import { sortByName } from '../helpers/sort.js';
 
 export default {
-  name: "Qbittorrent",
+  name: 'TorrentRSS',
   data() {
     return {
       inview: false,
       shows: [],
       removedShows: [],
-      loading: false
+      loading: false,
     };
   },
   async mounted() {
     this.inview = true;
     this.showsTimer();
 
-    this.removedShows = await this.$http
-      .get("/torrentrss/removed-shows")
-      .then(res => res.data);
+    this.removedShows = await this.$http.get('/torrentrss/removed-shows').then(res => res.data);
   },
 
   beforeDestroy() {
@@ -74,9 +76,7 @@ export default {
 
   methods: {
     async showsTimer() {
-      this.shows = await this.$http
-        .get("/torrentrss/shows")
-        .then(res => res.data);
+      this.shows = await this.$http.get('/torrentrss/shows').then(res => res.data);
 
       if (this.inview) {
         setTimeout(() => {
@@ -85,15 +85,18 @@ export default {
       }
     },
     async remove(show) {
-      await this.$http.delete("/torrentrss/shows", {
-        params: { show: show.name }
+      await this.$http.delete('/torrentrss/shows', {
+        params: { show: show.name },
       });
-      this.shows.splice(this.shows.findIndex(s => s.name === show.name), 1);
+      this.shows.splice(
+        this.shows.findIndex(s => s.name === show.name),
+        1
+      );
       this.removedShows.push(show);
     },
     async restore(show) {
-      await this.$http.delete("/torrentrss/removed-shows", {
-        params: { show: show.name }
+      await this.$http.delete('/torrentrss/removed-shows', {
+        params: { show: show.name },
       });
       this.removedShows.splice(
         this.removedShows.findIndex(s => s.name === show.name),
@@ -109,11 +112,11 @@ export default {
       const show = e.target.value;
       this.loading = true;
       try {
-        await this.$http.post("/torrentrss/shows", { show });
-        this.$refs.showinput.value = "";
+        await this.$http.post('/torrentrss/shows', { show });
+        this.$refs.showinput.value = '';
         this.shows.push({ name: show, downloads: [] });
       } catch (error) {
-        console.log("error");
+        console.log('error');
       }
       this.loading = false;
     },
@@ -121,25 +124,24 @@ export default {
     lastDownload(show) {
       const last = show.downloads.slice(0).pop();
       if (!last) {
-        return "";
+        return '';
       }
       return distanceInWordsStrict(new Date(), new Date(last.date));
-    }
+    },
   },
 
   computed: {
     sortedShows() {
       if (!this.shows) {
-        return;
+        return [];
       }
       return this.shows.sort(sortByName);
     },
     removedSortedShows() {
       return this.removedShows.sort(sortByName);
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

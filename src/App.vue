@@ -1,6 +1,6 @@
 <template>
   <div id="app" :class="{ minimized: minimenu }">
-    <main-menu @minimize="minid => minimenu = minid"></main-menu>
+    <main-menu @minimize="minid => (minimenu = minid)"></main-menu>
     <div class="content">
       <router-view></router-view>
     </div>
@@ -8,18 +8,17 @@
 </template>
 
 <script>
-import MainMenu from "./components/MainMenu.vue";
+import MainMenu from './components/MainMenu.vue';
 export default {
   components: { MainMenu },
   data() {
     return {
-      minimenu: false
+      minimenu: false,
     };
   },
-  mounted() {}
+  mounted() {},
 };
 </script>
-
 
 <style lang="scss">
 #app {

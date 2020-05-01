@@ -64,7 +64,7 @@
             <td v-text="torrent.name"></td>
             <td v-text="torrent.ratio.toFixed(2)"></td>
             <td v-text="prettierBytes(torrent.downloaded || 0)"></td>
-            <td v-text="distanceInWordsStrict(new Date(), new Date(torrent.added_on * 1000))"></td>
+            <td v-text="formatDistanceStrict(new Date(), new Date(torrent.added_on * 1000))"></td>
             <td class="center-text" v-text="`${torrent.num_leechs} / ${torrent.num_seeds}`"></td>
             <td v-text="`${prettierBytes(torrent.dlspeed || 0)}/s`"></td>
             <td v-text="`${prettierBytes(torrent.upspeed || 0)}/s`"></td>
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { distanceInWordsStrict } from 'date-fns';
+import { formatDistanceStrict } from 'date-fns';
 import ProgressBar from '../components/ProgressBar.vue';
 const prettierBytes = require('prettier-bytes');
 
@@ -193,7 +193,7 @@ export default {
       }
     },
     prettierBytes,
-    distanceInWordsStrict,
+    formatDistanceStrict,
   },
 
   computed: {

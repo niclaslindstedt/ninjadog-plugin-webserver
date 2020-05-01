@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import { distanceInWordsStrict } from 'date-fns';
 import { sortByName } from '../helpers/sort.js';
+import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 
 export default {
   name: 'TorrentRSS',
@@ -126,7 +126,7 @@ export default {
       if (!last) {
         return '';
       }
-      return distanceInWordsStrict(new Date(), new Date(last.date));
+      return formatDistanceStrict(new Date(), new Date(last.date));
     },
   },
 
@@ -135,10 +135,10 @@ export default {
       if (!this.shows) {
         return [];
       }
-      return this.shows.sort(sortByName);
+      return this.shows.slice().sort(sortByName);
     },
     removedSortedShows() {
-      return this.removedShows.sort(sortByName);
+      return this.removedShows.slice().sort(sortByName);
     },
   },
 };

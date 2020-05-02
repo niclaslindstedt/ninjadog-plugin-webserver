@@ -10,16 +10,16 @@ export default {
     progress: Number,
     default() {
       return 0;
-    }
-  }
+    },
+  },
 };
 </script>
 
 <style lang="scss" scoped>
-@import "../scss/_variables.scss";
+@import '../scss/_variables.scss';
 
 .progressbar-container {
-  content: " ";
+  content: ' ';
   width: 80px;
   height: 15px;
   .progressbar {

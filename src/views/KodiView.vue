@@ -24,14 +24,14 @@
 </template>
 
 <script>
-import { distanceInWordsStrict } from "date-fns";
+import { formatDistanceStrict } from 'date-fns';
 
 export default {
-  name: "Kodi",
+  name: 'Kodi',
   data() {
     return {
       inview: false,
-      scrobbles: []
+      scrobbles: [],
     };
   },
   mounted() {
@@ -45,12 +45,12 @@ export default {
 
   methods: {
     async scrobblesTimer() {
-      this.scrobbles = await this.$http.get("/kodi/scrobbled").then(res => {
+      this.scrobbles = await this.$http.get('/kodi/scrobbled').then(res => {
         let data = res.data.map(item => ({
           ...item,
-          date: distanceInWordsStrict(new Date(), new Date(item.date), {
-            addSuffix: true
-          })
+          date: formatDistanceStrict(new Date(), new Date(item.date), {
+            addSuffix: true,
+          }),
         }));
         return data;
       });
@@ -60,10 +60,9 @@ export default {
           this.scrobblesTimer();
         }, 20000);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 
-<style>
-</style>
+<style></style>

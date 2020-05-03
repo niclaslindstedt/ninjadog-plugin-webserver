@@ -10,8 +10,8 @@ export const sortString = (a, b) => {
 };
 
 export const sortByName = (a, b) => {
-  a = a.name ? a.name.toLowerCase() : '';
-  b = b.name ? b.name.toLowerCase() : '';
+  a = a.show.name ? a.show.name.toLowerCase() : "";
+  b = b.show.name ? b.show.name.toLowerCase() : "";
   if (a < b) {
     return -1;
   } else if (a > b) {

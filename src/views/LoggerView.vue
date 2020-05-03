@@ -1,13 +1,19 @@
 <template>
   <div>
     <div class="box">
-      <a href="#" @click.prevent="clearLog"> <i class="fas fa-trash"></i> clear log </a>
+      <a href="#" @click.prevent="clearLog">
+        <i class="fas fa-trash"></i> clear log
+      </a>
     </div>
     <div class="container">
       <div v-for="(entries, day) in entries" :key="day">
         <h2>{{ day }}</h2>
         <ul class="no-list">
-          <li v-for="(entry, i) in entries" :key="i" :class="'log-' + entry.color">
+          <li
+            v-for="(entry, i) in entries"
+            :key="i"
+            :class="'log-' + entry.color"
+          >
             [{{ entry.date }}] {{ entry.message }}
           </li>
         </ul>
@@ -17,14 +23,14 @@
 </template>
 
 <script>
-import { format } from 'date-fns';
+import { format } from "date-fns";
 
 export default {
-  name: 'Logger',
+  name: "Logger",
   data() {
     return {
       inview: false,
-      entries: [],
+      entries: []
     };
   },
   mounted() {
@@ -38,16 +44,16 @@ export default {
 
   methods: {
     async logTimer() {
-      const entries = await this.$http.get('/logger/log').then(res =>
+      const entries = await this.$http.get("/logger/log").then(res =>
         res.data
-          .split('\n')
+          .split("\n")
           .filter(line => line.length > 0)
-          .map(line => line.split(';'))
+          .map(line => line.split(";"))
           .map(entry => ({
             color: entry[0],
-            date: format(new Date(entry[1]), 'HH:mm'),
+            date: format(new Date(entry[1]), "HH:mm"),
             message: entry[2],
-            day: format(new Date(entry[1]), 'EEE dd MMM'),
+            day: format(new Date(entry[1]), "EEE dd MMM")
           }))
           .reverse()
       );
@@ -68,10 +74,10 @@ export default {
     },
 
     async clearLog() {
-      await this.$http.delete('logger/log');
+      await this.$http.delete("logger/log");
       this.logTimer();
-    },
-  },
+    }
+  }
 };
 </script>
 

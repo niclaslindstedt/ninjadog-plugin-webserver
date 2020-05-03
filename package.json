@@ -1,6 +1,6 @@
 {
   "name": "ninjakatt-plugin-webserver",
-  "version": "1.6.8",
+  "version": "1.7.0",
   "description": "",
   "main": "index.js",
   "keywords": [],
@@ -40,9 +40,7 @@
     "eslint-plugin-vue": "^6.2.2",
     "sass-loader": "^8.0.2"
   },
-  "devDependencies": {
-    
-  },
+  "devDependencies": {},
   "eslintConfig": {
     "root": true,
     "env": {

@@ -101,4 +101,8 @@ export default {
 .log-white {
   color: rgb(253, 253, 253);
 }
+
+.log-blue {
+  color: rgb(117, 149, 235);
+}
 </style>

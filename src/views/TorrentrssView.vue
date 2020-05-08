@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <input
-        type="text"
-        @keyup.enter="addShow"
-        placeholder="Add show"
-        ref="showinput"
-      />
+      <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput" />
     </div>
     <div class="container">
       <h2>Active shows</h2>
@@ -14,6 +9,7 @@
         <thead>
           <th>Name</th>
           <th class="center-text">Downloads</th>
+          <th class="center-text">Copy to</th>
           <th class="center-text">Last download</th>
           <th class="center-text">Remove</th>
         </thead>
@@ -21,6 +17,7 @@
           <tr v-for="(entry, index) in sortedShows" :key="`s${index}`">
             <td v-text="entry.show.name"></td>
             <td class="center-text" v-text="entry.downloads.length"></td>
+            <td class="center-text" v-text="entry.show.copyTo"></td>
             <td class="center-text" v-text="lastDownload(entry)"></td>
             <td class="center-text">
               <span @click="remove(entry)">
@@ -55,26 +52,24 @@
 </template>
 
 <script>
-import { sortByName } from "../helpers/sort.js";
-import formatDistanceStrict from "date-fns/formatDistanceStrict";
+import { sortByName } from '../helpers/sort.js';
+import formatDistanceStrict from 'date-fns/formatDistanceStrict';
 
 export default {
-  name: "TorrentRSS",
+  name: 'TorrentRSS',
   data() {
     return {
       inview: false,
       shows: [],
       removedShows: [],
-      loading: false
+      loading: false,
     };
   },
   async mounted() {
     this.inview = true;
     this.showsTimer();
 
-    this.removedShows = await this.$http
-      .get("/torrentrss/removed-shows")
-      .then(res => res.data);
+    this.removedShows = await this.$http.get('/torrentrss/removed-shows').then(res => res.data);
   },
 
   beforeDestroy() {
@@ -83,9 +78,7 @@ export default {
 
   methods: {
     async showsTimer() {
-      this.shows = await this.$http
-        .get("/torrentrss/shows")
-        .then(res => res.data);
+      this.shows = await this.$http.get('/torrentrss/shows').then(res => res.data);
 
       if (this.inview) {
         setTimeout(() => {
@@ -94,8 +87,8 @@ export default {
       }
     },
     async remove(entry) {
-      await this.$http.delete("/torrentrss/shows", {
-        params: { show: entry.show.name }
+      await this.$http.delete('/torrentrss/shows', {
+        params: { show: entry.show.name },
       });
       this.shows.splice(
         this.shows.findIndex(s => s.name === entry.show.name),
@@ -104,8 +97,8 @@ export default {
       this.removedShows.push(entry);
     },
     async restore(entry) {
-      await this.$http.delete("/torrentrss/removed-shows", {
-        params: { show: entry.show.name }
+      await this.$http.delete('/torrentrss/removed-shows', {
+        params: { show: entry.show.name },
       });
       this.removedShows.splice(
         this.removedShows.findIndex(s => s.name === entry.show.name),
@@ -121,12 +114,12 @@ export default {
       const show = e.target.value;
       this.loading = true;
       try {
-        const resp = await this.$http.post("/torrentrss/shows", { show });
+        const resp = await this.$http.post('/torrentrss/shows', { show });
         const newShow = resp.data;
-        this.$refs.showinput.value = "";
+        this.$refs.showinput.value = '';
         this.shows.push({ show: newShow, downloads: [] });
       } catch (error) {
-        console.log("error");
+        console.log('error');
       }
       this.loading = false;
     },
@@ -134,10 +127,10 @@ export default {
     lastDownload(show) {
       const last = show.downloads.slice(0).pop();
       if (!last) {
-        return "";
+        return '';
       }
       return formatDistanceStrict(new Date(), new Date(last.date));
-    }
+    },
   },
 
   computed: {
@@ -149,8 +142,8 @@ export default {
     },
     removedSortedShows() {
       return this.removedShows.slice().sort(sortByName);
-    }
-  }
+    },
+  },
 };
 </script>
 

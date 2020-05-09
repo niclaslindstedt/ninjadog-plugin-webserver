@@ -21,8 +21,9 @@ module.exports = class Webserver {
     this.server = null;
     this.router = null;
   }
+
   setup() {
-    this.setupListeners();
+    this.logDebug('Setting up webserver plugin');
     setTimeout(() => {
       const built = fs.existsSync(path.resolve(__dirname, 'dist'));
       if (!built) {
@@ -36,6 +37,19 @@ module.exports = class Webserver {
       }
     }, 2000);
   }
+
+  subscriptions() {
+    this.subscribe('webserver.add-route', this.actOnAddedRoute);
+  }
+
+  /********* Event Functions *********/
+
+  actOnAddedRoute = (method, route, callback) => {
+    app[method](route, callback);
+    this.logInfo(`Added route ${method}: ${route}`);
+  };
+
+  /********* Plugin Functions *********/
 
   startServer() {
     this.logInfo('Starting');
@@ -82,18 +96,5 @@ module.exports = class Webserver {
     });
 
     return plugins;
-  }
-
-  addRoute(method, route, callback) {
-    app[method](route, callback);
-    this.logInfo(`Added route ${method}: ${route}`);
-  }
-
-  setupListeners() {
-    emitter.register(
-      'webserver.add-route',
-      this.addRoute.bind(this),
-      Webserver.name
-    );
   }
 };

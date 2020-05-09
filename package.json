@@ -16,7 +16,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "./node_modules/.bin/rimraf ./node_modules/.cache && vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "test": "echo \"No test specified\""
   },
   "dependencies": {
     "axios": "^0.19.2",

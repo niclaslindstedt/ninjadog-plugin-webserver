@@ -1,7 +1,12 @@
 <template>
   <div>
     <div class="box">
-      <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput" />
+      <input
+        type="text"
+        @keyup.enter="addShow"
+        placeholder="Add show"
+        ref="showinput"
+      />
     </div>
     <div class="container">
       <h2>Active shows</h2>
@@ -62,14 +67,16 @@ export default {
       inview: false,
       shows: [],
       removedShows: [],
-      loading: false,
+      loading: false
     };
   },
   async mounted() {
     this.inview = true;
     this.showsTimer();
 
-    this.removedShows = await this.$http.get('/torrentrss/removed-shows').then(res => res.data);
+    this.removedShows = await this.$http
+      .get('/rssfeed/removed-shows')
+      .then(res => res.data);
   },
 
   beforeDestroy() {
@@ -78,7 +85,7 @@ export default {
 
   methods: {
     async showsTimer() {
-      this.shows = await this.$http.get('/torrentrss/shows').then(res => res.data);
+      this.shows = await this.$http.get('/rssfeed/shows').then(res => res.data);
 
       if (this.inview) {
         setTimeout(() => {
@@ -87,8 +94,8 @@ export default {
       }
     },
     async remove(entry) {
-      await this.$http.delete('/torrentrss/shows', {
-        params: { show: entry.show.name },
+      await this.$http.delete('/rssfeed/shows', {
+        params: { show: entry.show.name }
       });
       this.shows.splice(
         this.shows.findIndex(s => s.name === entry.show.name),
@@ -97,8 +104,8 @@ export default {
       this.removedShows.push(entry);
     },
     async restore(entry) {
-      await this.$http.delete('/torrentrss/removed-shows', {
-        params: { show: entry.show.name },
+      await this.$http.delete('/rssfeed/removed-shows', {
+        params: { show: entry.show.name }
       });
       this.removedShows.splice(
         this.removedShows.findIndex(s => s.name === entry.show.name),
@@ -114,7 +121,7 @@ export default {
       const show = e.target.value;
       this.loading = true;
       try {
-        const resp = await this.$http.post('/torrentrss/shows', { show });
+        const resp = await this.$http.post('/rssfeed/shows', { show });
         const newShow = resp.data;
         this.$refs.showinput.value = '';
         this.shows.push({ show: newShow, downloads: [] });
@@ -130,7 +137,7 @@ export default {
         return '';
       }
       return formatDistanceStrict(new Date(), new Date(last.date));
-    },
+    }
   },
 
   computed: {
@@ -142,8 +149,8 @@ export default {
     },
     removedSortedShows() {
       return this.removedShows.slice().sort(sortByName);
-    },
-  },
+    }
+  }
 };
 </script>
 

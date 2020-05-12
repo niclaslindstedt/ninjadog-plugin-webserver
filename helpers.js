@@ -9,12 +9,12 @@ async function asyncForEach(array, callback) {
 
 async function getPackage(name, isPlugin = true) {
   const fpath = isPlugin
-    ? path.resolve(__dirname, '..', `ninjakatt-plugin-${name}`, 'package.json')
+    ? path.resolve(__dirname, '..', `ninjadog-plugin-${name}`, 'package.json')
     : path.resolve(__dirname, '..', name, 'package.json');
   return await fs.readJSON(fpath);
 }
 
 module.exports = {
   asyncForEach,
-  getPackage,
+  getPackage
 };

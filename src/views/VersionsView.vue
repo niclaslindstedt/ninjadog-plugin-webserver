@@ -1,11 +1,14 @@
 <template>
   <div class="container">
-    <h2>Ninjakatt version</h2>
-    <span :class="{ upgradable: upgradable.includes('ninjakatt') }"
+    <h2>Ninjadog version</h2>
+    <span :class="{ upgradable: upgradable.includes('ninjadog') }"
       >Installed: {{ $api.info.version }}</span
     >
     <br />Latest:
-    <version-check @upgradable="name => upgradable.push(name)" name="ninjakatt"></version-check>
+    <version-check
+      @upgradable="name => upgradable.push(name)"
+      name="ninjadog"
+    ></version-check>
     <h2>Plugin versions</h2>
     <table class="datalist">
       <thead>
@@ -18,13 +21,15 @@
         <tr
           v-for="plugin in $api.plugins"
           :key="plugin.name"
-          :class="{ upgradable: upgradable.includes(`ninjakatt-plugin-${plugin.name}`) }"
+          :class="{
+            upgradable: upgradable.includes(`ninjadog-plugin-${plugin.name}`)
+          }"
         >
           <td>{{ plugin.name }}</td>
           <td>{{ plugin.version }}</td>
           <td>
             <version-check
-              :name="`ninjakatt-plugin-${plugin.name}`"
+              :name="`ninjadog-plugin-${plugin.name}`"
               :current-version="plugin.version"
               @upgradable="name => upgradable.push(name)"
             ></version-check>
@@ -42,9 +47,9 @@ export default {
   components: { VersionCheck },
   data() {
     return {
-      upgradable: [],
+      upgradable: []
     };
-  },
+  }
 };
 </script>
 

@@ -1,8 +1,8 @@
-import StartView from './views/StartView.js';
-import QbittorrentView from './views/QbittorrentView.js';
-import TorrentrssView from './views/TorrentrssView.js';
 import KodiView from './views/KodiView.js';
 import LoggerView from './views/LoggerView.js';
+import QbittorrentView from './views/QbittorrentView.js';
+import RssfeedView from './views/RssfeedView.js';
+import StartView from './views/StartView.js';
 
 export default [
   {
@@ -16,9 +16,9 @@ export default [
     component: QbittorrentView
   },
   {
-    path: '/torrentrss',
-    name: 'torrentrss',
-    component: TorrentrssView
+    path: '/rssfeed',
+    name: 'rssfeed',
+    component: RssfeedView
   },
   {
     path: '/kodi',

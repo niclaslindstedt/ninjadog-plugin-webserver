@@ -62,7 +62,7 @@ module.exports = class Webserver {
 
     app.get(`${apiPrefix}`, async (req, res) => {
       const plugins = await this.getPlugins();
-      const mainPackage = await getPackage('ninjakatt', false);
+      const mainPackage = await getPackage('ninjadog', false);
       res.status(200).send({
         plugins,
         info: {
@@ -85,7 +85,7 @@ module.exports = class Webserver {
   }
 
   async getPlugins() {
-    const plugins = global.Ninjakatt.plugins.installed.map(p => ({
+    const plugins = global.Ninjadog.plugins.installed.map(p => ({
       name: p.toLowerCase(),
       version: ''
     }));

@@ -2,9 +2,11 @@ const fs = require('fs-extra');
 const path = require('path');
 
 async function asyncForEach(array, callback) {
+  let jobs = [];
   for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
+    jobs.push(callback(array[index], index, array));
   }
+  return await Promise.all(jobs);
 }
 
 async function getPackage(name, isPlugin = true) {
@@ -15,7 +17,7 @@ async function getPackage(name, isPlugin = true) {
       `ninjadog-plugin-${name}`,
       'package.json'
     );
-    if (!fs.existsSync(firstPath)) {
+    if (!fs.existsSync(pluginPath)) {
       pluginPath = path.resolve(__dirname, '../plugins', name, 'package.json');
     }
     return await fs.readJSON(pluginPath);

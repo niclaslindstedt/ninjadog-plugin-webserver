@@ -5,7 +5,6 @@ const fs = require('fs-extra');
 const path = require('path');
 const exec = require('child_process').exec;
 const cors = require('cors');
-const emitter = global.emitter;
 const { asyncForEach, getPackage } = require('./helpers');
 
 const app = express();
@@ -66,15 +65,15 @@ module.exports = class Webserver {
       res.status(200).send({
         plugins,
         info: {
-          version: mainPackage.version
+          version: mainPackage.version,
         },
         routes: app._router.stack
-          .filter(r => r.name === 'bound dispatch')
-          .map(r => ({
+          .filter((r) => r.name === 'bound dispatch')
+          .map((r) => ({
             route: r.route.path,
-            method: Object.keys(r.route.methods)[0]
+            method: Object.keys(r.route.methods)[0],
           }))
-          .reverse()
+          .reverse(),
       });
     });
 
@@ -85,12 +84,12 @@ module.exports = class Webserver {
   }
 
   async getPlugins() {
-    const plugins = global.Ninjadog.plugins.installed.map(p => ({
+    const plugins = global.Ninjadog.plugins.installed.map((p) => ({
       name: p.toLowerCase(),
-      version: ''
+      version: '',
     }));
 
-    await asyncForEach(plugins, async plugin => {
+    await asyncForEach(plugins, async (plugin) => {
       const pkg = await getPackage(plugin.name);
       plugin.version = pkg.version;
     });

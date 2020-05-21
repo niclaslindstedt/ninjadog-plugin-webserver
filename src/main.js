@@ -20,5 +20,5 @@ Vue.prototype.$api = _api;
 new Vue({
   router,
   data: { Api: _api },
-  render: h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');

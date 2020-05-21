@@ -15,6 +15,7 @@ app.use(express.static(__dirname + '/dist'));
 app.use(cors());
 
 module.exports = class Webserver {
+
   constructor() {
     this.construct(__dirname);
     this.server = null;
@@ -41,19 +42,20 @@ module.exports = class Webserver {
     this.subscribe('webserver.add-route', this.actOnAddedRoute);
   }
 
-  /********* Event Functions *********/
+  /** ******* Event Functions *********/
 
   actOnAddedRoute = (method, route, callback) => {
     app[method](route, callback);
     this.logInfo(`Added route ${method}: ${route}`);
   };
 
-  /********* Plugin Functions *********/
+  /** ******* Plugin Functions *********/
 
   startServer() {
-    this.logInfo('Starting');
+    this.logInfo('Starting webserver');
 
     if (this.server) {
+      this.logDebug('Closing already opened webserver');
       this.server.close();
     }
 
@@ -79,7 +81,7 @@ module.exports = class Webserver {
 
     this.server = http.createServer(app);
     this.server.listen(this.settings.port, () => {
-      this.logInfo(`Started, listening on port ${this.settings.port}`);
+      this.logInfo(`Webserver started, listening on port ${this.settings.port}`);
     });
   }
 
@@ -96,4 +98,5 @@ module.exports = class Webserver {
 
     return plugins;
   }
+
 };

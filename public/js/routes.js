@@ -1,33 +1,27 @@
-import KodiView from './views/KodiView.js';
 import LoggerView from './views/LoggerView.js';
-import QbittorrentView from './views/QbittorrentView.js';
-import RssfeedView from './views/RssfeedView.js';
+import QbView from './views/QbView.js';
+import RssReaderView from './views/RssReaderView.js';
 import StartView from './views/StartView.js';
 
 export default [
   {
     path: '/',
     name: 'start',
-    component: StartView
+    component: StartView,
   },
   {
-    path: '/qbittorrent',
-    name: 'qbittorrent',
-    component: QbittorrentView
+    path: '/qb',
+    name: 'qb',
+    component: QbView,
   },
   {
-    path: '/rssfeed',
-    name: 'rssfeed',
-    component: RssfeedView
-  },
-  {
-    path: '/kodi',
-    name: 'kodi',
-    component: KodiView
+    path: '/rssreader',
+    name: 'rssreader',
+    component: RssReaderView,
   },
   {
     path: '/logger',
     name: 'logger',
-    component: LoggerView
-  }
+    component: LoggerView,
+  },
 ];

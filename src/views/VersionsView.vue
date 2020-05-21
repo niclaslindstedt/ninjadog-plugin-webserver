@@ -1,14 +1,11 @@
 <template>
   <div class="container">
     <h2>Ninjadog version</h2>
-    <span :class="{ upgradable: upgradable.includes('ninjadog') }"
-      >Installed: {{ $api.info.version }}</span
-    >
+    <span
+      :class="{ upgradable: upgradable.includes('ninjadog') }"
+    >Installed: {{ $api.info.version }}</span>
     <br />Latest:
-    <version-check
-      @upgradable="(name) => upgradable.push(name)"
-      name="ninjadog"
-    ></version-check>
+    <version-check @upgradable="name => upgradable.push(name)" name="ninjadog"></version-check>
     <h2>Plugin versions</h2>
     <table class="datalist">
       <thead>
@@ -31,7 +28,7 @@
             <version-check
               :name="`ninjadog-plugin-${plugin.name}`"
               :current-version="plugin.version"
-              @upgradable="(name) => upgradable.push(name)"
+              @upgradable="name => upgradable.push(name)"
             ></version-check>
           </td>
           <td></td>
@@ -42,19 +39,19 @@
 </template>
 
 <script>
-import VersionCheck from '../components/VersionCheck.vue';
+import VersionCheck from "../components/VersionCheck.vue";
 export default {
   components: { VersionCheck },
   data() {
     return {
-      upgradable: [],
+      upgradable: []
     };
-  },
+  }
 };
 </script>
 
 <style lang="scss">
-@import '../scss/_variables.scss';
+@import "../scss/_variables.scss";
 .upgradable {
   color: $orange-color;
 }

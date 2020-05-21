@@ -4,21 +4,13 @@
       <ul class="no-list torrent-transferinfo">
         <li title="Download">
           <i class="fas fa-arrow-alt-circle-down"></i>
-          <span v-if="transferInfo.alltime_dl">
-            {{ prettierBytes(transferInfo.alltime_dl) }}
-          </span>
-          <span v-if="transferInfo.dl_info_speed">
-            ({{ prettierBytes(transferInfo.dl_info_speed) }})
-          </span>
+          <span v-if="transferInfo.alltime_dl">{{ prettierBytes(transferInfo.alltime_dl) }}</span>
+          <span v-if="transferInfo.dl_info_speed">({{ prettierBytes(transferInfo.dl_info_speed) }})</span>
         </li>
         <li title="Upload">
           <i class="fas fa-arrow-alt-circle-up"></i>
-          <span v-if="transferInfo.alltime_ul">
-            {{ prettierBytes(transferInfo.alltime_ul) }}
-          </span>
-          <span v-if="transferInfo.ul_info_speed">
-            ({{ prettierBytes(transferInfo.ul_info_speed) }})
-          </span>
+          <span v-if="transferInfo.alltime_ul">{{ prettierBytes(transferInfo.alltime_ul) }}</span>
+          <span v-if="transferInfo.ul_info_speed">({{ prettierBytes(transferInfo.ul_info_speed) }})</span>
         </li>
         <li v-if="transferInfo.free_space_on_disk" title="Free disk space">
           <i class="fas fa-hdd"></i>
@@ -32,12 +24,7 @@
 
       <select v-model="filters.trackerName">
         <option value></option>
-        <option
-          v-for="tracker in trackers"
-          :key="tracker"
-          :value="tracker"
-          v-text="tracker"
-        ></option>
+        <option v-for="tracker in trackers" :key="tracker" :value="tracker" v-text="tracker"></option>
       </select>
     </div>
 
@@ -77,19 +64,17 @@
         </transition-group>
       </table>
     </template>
-    <div class="container" v-else>
-      No connection to qbittorrent!
-    </div>
+    <div class="container" v-else>No connection to qbittorrent!</div>
   </div>
 </template>
 
 <script>
-import { formatDistanceStrict } from 'date-fns';
-import ProgressBar from '../components/ProgressBar.vue';
-const prettierBytes = require('prettier-bytes');
+import { formatDistanceStrict } from "date-fns";
+import ProgressBar from "../components/ProgressBar.vue";
+const prettierBytes = require("prettier-bytes");
 
 export default {
-  name: 'Qbittorrent',
+  name: "Qb",
   components: { ProgressBar },
   data() {
     return {
@@ -97,10 +82,10 @@ export default {
       torrents: [],
       connected: true,
       transferInfo: {},
-      sortByKey: 'added_on',
+      sortByKey: "added_on",
       filters: {
-        trackerName: '',
-      },
+        trackerName: ""
+      }
     };
   },
   mounted() {
@@ -109,7 +94,7 @@ export default {
     this.getList();
     this.getTransferInfo();
 
-    const info = window.localStorage.getItem('qbit');
+    const info = window.localStorage.getItem("qbit");
     if (info) {
       this.transferInfo = JSON.parse(info);
     }
@@ -129,10 +114,11 @@ export default {
 
     async getTransferInfo() {
       try {
-        const info = (await this.$http.get('/qbittorrent/transferinfo').then(d => d.data)) || {};
+        const info =
+          (await this.$http.get("/qb/transferinfo").then(d => d.data)) || {};
         this.connected = true;
 
-        if (!info.hasOwnProperty('server_state')) {
+        if (!info.hasOwnProperty("server_state")) {
           return;
         }
 
@@ -142,18 +128,20 @@ export default {
           this.transferInfo[k] = server[k];
         });
 
-        window.localStorage.setItem('qbit', JSON.stringify(this.transferInfo));
+        window.localStorage.setItem("qbit", JSON.stringify(this.transferInfo));
       } catch (e) {
         this.connected = false;
       }
     },
     async getList() {
       try {
-        this.torrents = (await this.$http.get('/qbittorrent/list').then(res => res.data)) || [];
+        this.torrents =
+          (await this.$http.get("/qb/list").then(res => res.data)) || [];
 
         this.torrents = this.torrents.map(torrent => ({
           ...torrent,
-          completion_on: torrent.completion_on === 4294967295 ? null : torrent.completion_on,
+          completion_on:
+            torrent.completion_on === 4294967295 ? null : torrent.completion_on
         }));
         if (this.inview) {
           this.timer();
@@ -166,26 +154,26 @@ export default {
     },
     getIcon(state) {
       switch (state) {
-        case 'forcedDOWN':
-        case 'downloading':
+        case "forcedDOWN":
+        case "downloading":
           return "<i class='fas fa-arrow-alt-circle-down'></i>";
-        case 'forcedUP':
-        case 'uploading':
+        case "forcedUP":
+        case "uploading":
           return "<i class='fas fa-arrow-alt-circle-up'></i>";
-        case 'pausedDL':
+        case "pausedDL":
           return "<i class='fas fa-pause-circle'></i>";
-        case 'pauseUL':
+        case "pauseUL":
           return "<i class='fas fa-pause-circle'></i>";
-        case 'stalledUP':
+        case "stalledUP":
           return "<i class='far fa-arrow-alt-circle-up'></i>";
-        case 'stalledDL':
+        case "stalledDL":
           return "<i class='far fa-arrow-alt-circle-down'></i>";
-        case 'queuedUP':
+        case "queuedUP":
           return `<span class="fa-layers">
             <i class='fas fa-arrow-alt-circle-up'"></i>
             <i style="color: red; font-weight: 300" class='fas fa-pause fa-inverse' data-fa-transform="shrink-5 down-8 right-8"></i>
           </span>`;
-        case 'queuedDOWN':
+        case "queuedDOWN":
           return `<span class="fa-layers">
             <i class='fas fa-arrow-alt-circle-down'"></i>
             <i style="color: red; font-weight: 300" class='fas fa-pause fa-inverse' data-fa-transform="shrink-5 down-8 right-8"></i>
@@ -193,7 +181,7 @@ export default {
       }
     },
     prettierBytes,
-    formatDistanceStrict,
+    formatDistanceStrict
   },
 
   computed: {
@@ -206,7 +194,9 @@ export default {
 
       Object.keys(this.filters).forEach(filter => {
         const filterValue = this.filters[filter];
-        sorted = sorted.filter(t => (!filterValue ? true : t[filter] === filterValue));
+        sorted = sorted.filter(t =>
+          !filterValue ? true : t[filter] === filterValue
+        );
       });
 
       return sorted.sort((a, b) => b[this.sortByKey] - a[this.sortByKey]);
@@ -218,8 +208,8 @@ export default {
       return this.torrents
         .map(t => t.trackerName)
         .filter((item, i, ar) => ar.indexOf(item) === i && item.length);
-    },
-  },
+    }
+  }
 };
 </script>
 

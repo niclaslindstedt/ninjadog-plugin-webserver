@@ -15,7 +15,6 @@ app.use(express.static(__dirname + '/dist'));
 app.use(cors());
 
 module.exports = class Webserver {
-
   constructor() {
     this.construct(__dirname);
     this.server = null;
@@ -69,8 +68,8 @@ module.exports = class Webserver {
           version: mainPackage.version,
         },
         routes: app._router.stack
-          .filter((r) => r.name === 'bound dispatch')
-          .map((r) => ({
+          .filter(r => r.name === 'bound dispatch')
+          .map(r => ({
             route: r.route.path,
             method: Object.keys(r.route.methods)[0],
           }))
@@ -85,17 +84,16 @@ module.exports = class Webserver {
   }
 
   async getPlugins() {
-    const plugins = global.Ninjadog.plugins.installed.map((p) => ({
+    const plugins = global.Ninjadog.plugins.installed.map(p => ({
       name: p.toLowerCase(),
       version: '',
     }));
 
-    await asyncForEach(plugins, async (plugin) => {
+    await asyncForEach(plugins, async plugin => {
       const pkg = await getPackage(plugin.name);
       plugin.version = pkg.version;
     });
 
     return plugins;
   }
-
 };

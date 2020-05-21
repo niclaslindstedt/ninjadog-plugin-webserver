@@ -1,12 +1,7 @@
 <template>
   <div>
     <div class="box">
-      <input
-        type="text"
-        @keyup.enter="addShow"
-        placeholder="Add show"
-        ref="showinput"
-      />
+      <input type="text" @keyup.enter="addShow" placeholder="Add show" ref="showinput" />
     </div>
     <div class="container">
       <h2>Active shows</h2>
@@ -57,11 +52,11 @@
 </template>
 
 <script>
-import { sortByName } from '../helpers/sort.js';
-import formatDistanceStrict from 'date-fns/formatDistanceStrict';
+import { sortByName } from "../helpers/sort.js";
+import formatDistanceStrict from "date-fns/formatDistanceStrict";
 
 export default {
-  name: 'TorrentRSS',
+  name: "RssReader",
   data() {
     return {
       inview: false,
@@ -75,7 +70,7 @@ export default {
     this.showsTimer();
 
     this.removedShows = await this.$http
-      .get('/rssfeed/removed-shows')
+      .get("/rss/removed-shows")
       .then(res => res.data);
   },
 
@@ -85,7 +80,7 @@ export default {
 
   methods: {
     async showsTimer() {
-      this.shows = await this.$http.get('/rssfeed/shows').then(res => res.data);
+      this.shows = await this.$http.get("/rss/shows").then(res => res.data);
 
       if (this.inview) {
         setTimeout(() => {
@@ -94,7 +89,7 @@ export default {
       }
     },
     async remove(entry) {
-      await this.$http.delete('/rssfeed/shows', {
+      await this.$http.delete("/rss/shows", {
         params: { show: entry.show.name }
       });
       this.shows.splice(
@@ -104,7 +99,7 @@ export default {
       this.removedShows.push(entry);
     },
     async restore(entry) {
-      await this.$http.delete('/rssfeed/removed-shows', {
+      await this.$http.delete("/rss/removed-shows", {
         params: { show: entry.show.name }
       });
       this.removedShows.splice(
@@ -121,12 +116,12 @@ export default {
       const show = e.target.value;
       this.loading = true;
       try {
-        const resp = await this.$http.post('/rssfeed/shows', { show });
+        const resp = await this.$http.post("/rss/shows", { show });
         const newShow = resp.data;
-        this.$refs.showinput.value = '';
+        this.$refs.showinput.value = "";
         this.shows.push({ show: newShow, downloads: [] });
       } catch (error) {
-        console.log('error');
+        console.log("error");
       }
       this.loading = false;
     },
@@ -134,7 +129,7 @@ export default {
     lastDownload(show) {
       const last = show.downloads.slice(0).pop();
       if (!last) {
-        return '';
+        return "";
       }
       return formatDistanceStrict(new Date(), new Date(last.date));
     }

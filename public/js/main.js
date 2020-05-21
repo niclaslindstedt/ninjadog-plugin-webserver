@@ -16,5 +16,5 @@ const router = new VueRouter({
 new Vue({
   data: { Api: _api },
   router,
-  render: (h) => h(App),
+  render: h => h(App),
 }).$mount('#app');

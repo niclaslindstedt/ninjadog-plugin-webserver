@@ -21,10 +21,8 @@ export default {
 
   computed: {
     pluginsWithRoute() {
-      const activeRoutes = this.$router.options.routes.map((r) => r.name);
-      return this.$api.plugins
-        .filter((p) => activeRoutes.indexOf(p) > -1)
-        .sort(sortString);
-    }
-  }
+      const activeRoutes = this.$router.options.routes.map(r => r.name);
+      return this.$api.plugins.filter(p => activeRoutes.indexOf(p) > -1).sort(sortString);
+    },
+  },
 };

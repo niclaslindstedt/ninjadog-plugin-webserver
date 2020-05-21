@@ -1,9 +1,8 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import KodiView from './views/KodiView.vue';
 import LoggerView from './views/LoggerView.vue';
-import QbittorrentView from './views/QbittorrentView.vue';
-import RssfeedView from './views/RssfeedView.vue';
+import QbView from './views/QbView.vue';
+import RssReaderView from './views/RssReaderView.vue';
 import StartView from './views/StartView.vue';
 import VersionsView from './views/VersionsView.vue';
 
@@ -14,32 +13,27 @@ export default new Router({
     {
       path: '/',
       name: 'start',
-      component: StartView
+      component: StartView,
     },
     {
-      path: '/qbittorrent',
-      name: 'qbittorrent',
-      component: QbittorrentView
+      path: '/qb',
+      name: 'qb',
+      component: QbView,
     },
     {
-      path: '/rssfeed',
-      name: 'rssfeed',
-      component: RssfeedView
-    },
-    {
-      path: '/kodi',
-      name: 'kodi',
-      component: KodiView
+      path: '/rss',
+      name: 'rss',
+      component: RssReaderView,
     },
     {
       path: '/logger',
       name: 'logger',
-      component: LoggerView
+      component: LoggerView,
     },
     {
       path: '/versions',
       name: 'versions',
-      component: VersionsView
-    }
-  ]
+      component: VersionsView,
+    },
+  ],
 });

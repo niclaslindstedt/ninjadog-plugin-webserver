@@ -11,19 +11,17 @@ async function asyncForEach(array, callback) {
 
 async function getPackage(name, isPlugin = true) {
   if (isPlugin) {
-    var pluginPath = path.resolve(
-      __dirname,
-      '..',
-      `ninjadog-plugin-${name}`,
-      'package.json'
-    );
+    var pluginPath = path.resolve(__dirname, '..', `ninjadog-plugin-${name}`, 'package.json');
     if (!fs.existsSync(pluginPath)) {
-      pluginPath = path.resolve(__dirname, '../plugins', name, 'package.json');
+      pluginPath = path.resolve(__dirname, '..', name, 'package.json');
     }
     return await fs.readJSON(pluginPath);
   }
 
-  var fpath = path.resolve(__dirname, '..', name, 'package.json');
+  var fpath = path.resolve(__dirname, '../..', name, 'package.json');
+  if (!fs.existsSync(fpath)) {
+    fpath = path.resolve(__dirname, '../../base', 'package.json');
+  }
   return await fs.readJSON(fpath);
 }
 

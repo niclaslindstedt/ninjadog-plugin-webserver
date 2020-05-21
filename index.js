@@ -23,7 +23,6 @@ module.exports = class Webserver {
   }
 
   setup() {
-    this.logDebug('Setting up webserver plugin');
     setTimeout(() => {
       const built = fs.existsSync(path.resolve(__dirname, 'dist'));
       if (!built) {
@@ -42,14 +41,14 @@ module.exports = class Webserver {
     this.subscribe('webserver.add-route', this.actOnAddedRoute);
   }
 
-  /** ******* Event Functions *********/
+  /** Event Functions **/
 
   actOnAddedRoute = (method, route, callback) => {
     app[method](route, callback);
     this.logInfo(`Added route ${method}: ${route}`);
   };
 
-  /** ******* Plugin Functions *********/
+  /** Plugin Functions **/
 
   startServer() {
     this.logInfo('Starting webserver');
